@@ -4,7 +4,7 @@ A simple carousel built on RIOT
 
 ## Demo
 
-
+[RIOT Carousel](https://acousticseagull.github.io)
 
 ## Usage
 
