@@ -1,0 +1,134 @@
+
+<carousel onmouseenter={ pause } onmouseleave={ cycle }>
+    <carousel-body>
+        <yield />
+    </carousel-body>
+
+    <ol if={ items.length > 1 }>
+        <li each={ j, i in items } onclick={ to }>
+            <div show={ i == index }></div>
+        </li>
+    </ol>
+
+    <style scoped>
+        :scope {
+            position: relative;
+            display: block;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        > ol {
+            list-style: none;
+            position: absolute;
+            bottom: 10%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+            box-sizing: border-box;
+            font-size: 10px;
+            color: #ffffff;
+        }
+
+        > ol li {
+            display: inline-block;
+            margin-right: 5px;
+            cursor: pointer;
+            background-color: rgba(255,255,255,.50);
+            border: 1px solid rgba(0,0,0,.50);
+            padding: 2px;
+            box-sizing: border-box;
+            width: 15px;
+            height: 15px;
+            border-radius: 100%;
+        }
+
+        > ol li.active {
+            pointer-events: none;
+            color: #ffffff;
+        }
+
+        > ol li div {
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            width: 7px;
+            height: 7px;
+            border-radius: 100%;
+        }
+
+        carousel-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        carousel-item {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            width: 100%;
+            height: 100%;
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        carousel-item.active {
+            opacity: 1;
+            z-index: 1;
+        }
+    </style>
+
+    <script>
+        var self = this;
+
+        this.index = this.opts.index || 0;
+        this.items = Array.isArray(this.tags['carousel-item']) ? this.tags['carousel-item'] : [this.tags['carousel-item']];
+        this.current = this.items[this.index];
+        this.interval = this.opts.interval || 5000;
+        this.paused = false;
+        this.root.style.height = this.opts.height || '480px';
+
+        cycle(e) {
+            if (this.paused) this.paused = false;
+
+            this.loop = setInterval(function () {
+                self.next();
+            }, this.interval);
+        }
+
+        to(e) {
+            this.index = e.item.i;
+        }
+
+        next() {
+          this.index = (this.index < this.items.length - 1 ? this.index + 1 : 0);
+          this.update();
+        }
+
+        prev() {
+          this.index = (this.index > 0 ? this.index - 1 : this.items.length - 1);
+          this.update();
+        }
+
+        pause(e) {
+          this.paused = true;
+          clearInterval(this.loop);
+        }
+
+        if (this.items.length > 1) this.on('mount', this.cycle);
+
+        this.on('update', function () {
+          this.current.active = false;
+          this.current = this.items[this.index];
+          this.current.active = true;
+        });
+    </script>
+</carousel>
+
+<carousel-item class={ active: active }>
+    <yield />
+</carousel-item>
