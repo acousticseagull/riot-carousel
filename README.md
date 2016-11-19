@@ -1,1 +1,4 @@
 # riot-carousel
+
+## Usage
+
