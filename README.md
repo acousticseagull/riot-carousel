@@ -1,6 +1,6 @@
 # riot-carousel
 
-A simple carousel built on RIOT
+A simple carousel built with RIOT
 
 ## Demo
 
